@@ -17,13 +17,14 @@ const verifyToken = (req: NextApiRequest) => {
 const handleRepo = async (req: NextApiRequest, res: NextApiResponse) => {
   const { owner, repo } = req.query;
 
+  console.log("auth headers", req.headers.authorization);
   // Get the auth header and extract the token
   const authHeader = req.headers.authorization;
   if (!authHeader) {
     return res.status(401).json({ error: "Missing authorization header" });
   }
   const token = authHeader.split(" ")[1];
-
+  console.log("token", token);
   try {
     // Verify the user token with Supabase
     const supabase = createServerSupabaseClient({
@@ -31,12 +32,12 @@ const handleRepo = async (req: NextApiRequest, res: NextApiResponse) => {
       res,
     });
 
-    const { data: user, error } = await supabase.auth.getUser(token);
+    const { data: user } = await supabase.auth.getUser(token);
 
-    if (error) {
-      console.log("error", error);
-      // throw new Error(error.message);
-    }
+    // if (error) {
+    //   console.log("error", error);
+    //   // throw new Error(error.message);
+    // }
 
     // Initialize the Octokit GitHub client with the access token
     const octokit = new Octokit({ auth: token });
