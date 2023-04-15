@@ -13,10 +13,9 @@ const SignIn = () => {
   const user = useUser();
   const supabaseClient = useSupabaseClient();
   const [redirectUri, setRedirectUri] = useState("");
-  const [accesToken, setAccessToken] = useState("");
+  const [accessToken, setAccessToken] = useState("");
 
   const session = useSession();
-  console.log("session token", session?.access_token);
 
   useEffect(() => {
     const redirectParam = router.query.redirect_uri as string;
@@ -26,19 +25,23 @@ const SignIn = () => {
   }, [router.query]);
 
   useEffect(() => {
-    if (user) {
-      // Assuming you have the authorization code in a variable called authCode
+    if (session) {
+      setAccessToken(session.access_token);
+    }
+  }, [session]);
 
+  useEffect(() => {
+    if (user && accessToken) {
+      // console.log("access", accessToken);
       if (redirectUri) {
         // Redirect the user back to the Chat.openai endpoint with the authorization code
-        router.replace(`${redirectUri}?code=123`);
+        router.replace(`${redirectUri}?code=${accessToken}`);
       } else {
         // Redirect to the desired page if redirectUri is not available
-        router.replace("/welcome");
+        // router.replace("/welcome");
       }
     }
-  }, [user, router, redirectUri]);
-
+  }, [user, router, redirectUri, accessToken]);
   if (!user)
     return (
       <div className="flex justify-center height-screen-helper">
