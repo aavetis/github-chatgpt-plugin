@@ -1,62 +1,47 @@
-// pages/api/repo.ts
-
 import { NextApiRequest, NextApiResponse } from "next";
 import { Octokit } from "@octokit/rest";
-import { authenticateUser } from "@/utils/supabase";
-import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
-const verifyToken = (req: NextApiRequest) => {
-  const authHeader = req.headers["authorization"];
-  if (!authHeader) {
-    return false;
-  }
-  const token = authHeader.split(" ")[1];
-  return token === process.env.OPENAI_VERIFY_TOKEN;
-};
+interface RepoResponse {
+  id: number;
+  name: string;
+  full_name: string;
+  description: string;
+}
 
-const handleRepo = async (req: NextApiRequest, res: NextApiResponse) => {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   const { owner, repo } = req.query;
 
-  console.log("auth headers", req.headers.authorization);
-  // Get the auth header and extract the token
+  if (typeof owner !== "string" || typeof repo !== "string") {
+    return res.status(400).json({ error: "Invalid query parameters" });
+  }
+
   const authHeader = req.headers.authorization;
-  if (!authHeader) {
-    return res.status(401).json({ error: "Missing authorization header" });
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ error: "Unauthorized" });
   }
+
   const token = authHeader.split(" ")[1];
-  console.log("token", token);
+
   try {
-    // Verify the user token with Supabase
-    // const supabase = createServerSupabaseClient({
-    //   req,
-    //   res,
-    // });
-
-    // const { data: user } = await supabase.auth.getUser(token);
-
-    // if (error) {
-    //   console.log("error", error);
-    //   // throw new Error(error.message);
-    // }
-
-    // Initialize the Octokit GitHub client with the access token
     const octokit = new Octokit({ auth: token });
+    const { data } = await octokit.rest.repos.get({ owner, repo });
 
-    // Fetch repository details from the GitHub API
-    const { data: repository } = await octokit.rest.repos.get({
-      owner: owner as string,
-      repo: repo as string,
-    });
+    const response: RepoResponse = {
+      id: data.id,
+      name: data.name,
+      full_name: data.full_name,
+      description: data.description || "",
+    };
 
-    res.status(200).json({
-      id: repository.id,
-      name: repository.name,
-      full_name: repository.full_name,
-      description: repository.description,
-    });
-  } catch (error: any) {
-    res.status(401).json({ error: error.message });
+    res.status(200).json(response);
+  } catch (error) {
+    if (error.status === 404) {
+      res.status(404).json({ error: "Not Found" });
+    } else {
+      res.status(500).json({ error: "Internal Server Error" });
+    }
   }
-};
-
-export default handleRepo;
+}
