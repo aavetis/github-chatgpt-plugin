@@ -35,7 +35,7 @@ const handleRepo = async (req: NextApiRequest, res: NextApiResponse) => {
 
     if (error) {
       console.log("error", error);
-      throw new Error(error.message);
+      // throw new Error(error.message);
     }
 
     // Initialize the Octokit GitHub client with the access token
