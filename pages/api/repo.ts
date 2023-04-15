@@ -1,23 +1,54 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { Octokit } from "@octokit/rest";
+import { Octokit, RestEndpointMethodTypes } from "@octokit/rest";
 import { authenticateUser } from "@/utils/supabase";
 
-interface RepoResponse {
-  id: number;
-  name: string;
-  full_name: string;
-  description: string;
+type OctokitMethod = keyof RestEndpointMethodTypes;
+
+interface OctokitCall {
+  octokitMethod: OctokitMethod;
+  args: Record<string, unknown>;
+}
+
+function isOctokitCategory(
+  octokit: Octokit,
+  category: string
+): category is keyof Octokit["rest"] {
+  return category in octokit.rest;
+}
+
+function isOctokitMethod(
+  octokit: Octokit,
+  category: keyof Octokit["rest"],
+  method: string
+): method is keyof Octokit["rest"][typeof category] {
+  return method in octokit.rest[category];
+}
+
+async function callOctokitMethod(octokit: Octokit, octokitCall: OctokitCall) {
+  const { octokitMethod, args } = octokitCall;
+  const methodParts = octokitMethod.split(".");
+
+  if (methodParts.length !== 2) {
+    throw new Error("Invalid octokitMethod");
+  }
+
+  const [category, method] = methodParts;
+
+  if (
+    !isOctokitCategory(octokit, category) ||
+    !isOctokitMethod(octokit, category, method)
+  ) {
+    throw new Error("Invalid octokitMethod");
+  }
+
+  return (octokit.rest[category][method] as any)(args);
 }
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { owner, repo } = req.query;
-
-  if (typeof owner !== "string" || typeof repo !== "string") {
-    return res.status(400).json({ error: "Invalid query parameters" });
-  }
+  const { octokitMethod, args } = req.query;
 
   const authHeader = req.headers.authorization;
   console.log("authHeader", authHeader);
@@ -25,29 +56,25 @@ export default async function handler(
     return res.status(401).json({ error: "Unauthorized" });
   }
 
-  // const { user } = await authenticateUser(req, res);
-
-  // if (!user) {
-  //   return res.status(401).json({ error: "Unauthorized from supabase" });
-  // }
-
   const token = authHeader.split(" ")[1];
   const isAnonymous = token === "ANONYMOUS";
 
   try {
+    const parsedArgs = JSON.parse(args as string);
     const octokit = isAnonymous ? new Octokit() : new Octokit({ auth: token });
-    const { data } = await octokit.rest.repos.get({ owner, repo });
 
-    const response: RepoResponse = {
-      id: data.id,
-      name: data.name,
-      full_name: data.full_name,
-      description: data.description || "",
-    };
+    // Logging the requested function call and constructed call
+    console.log("Requested function call:", octokitMethod);
+    console.log("Constructed call with args:", parsedArgs);
 
-    res.status(200).json(response);
+    const data = await callOctokitMethod(octokit, {
+      octokitMethod: octokitMethod as OctokitMethod,
+      args: parsedArgs,
+    });
+
+    res.status(200).json(data);
   } catch (error: any) {
-    console.error("Error while fetching repository:", error); // Add this line to log the error
+    console.error("Error while calling the Octokit method:", error);
 
     if (error.status === 404) {
       res.status(404).json({ error: "Not Found" });

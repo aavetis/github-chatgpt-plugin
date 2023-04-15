@@ -8,20 +8,20 @@ servers:
 paths:
   /api/repo:
     get:
-      operationId: getRepo
-      summary: Get the details of a GitHub repository
+      operationId: callOctokitMethod
+      summary: Make a dynamic Octokit API call
       parameters:
         - in: query
-          name: owner
+          name: octokitMethod
           schema:
             type: string
-          description: The repository owner's username
+          description: The Octokit method to call in the format `category.method`, e.g., 'issues.listForRepo', 'repos.get', etc.
           required: true
         - in: query
-          name: repo
+          name: args
           schema:
             type: string
-          description: The repository name
+          description: A JSON string containing the arguments for the Octokit method
           required: true
       responses:
         "200":
@@ -29,7 +29,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/getRepoResponse"
+                type: object
+                additionalProperties: true
         "401":
           description: Unauthorized
           content:
@@ -38,6 +39,12 @@ paths:
                 $ref: "#/components/schemas/errorResponse"
         "404":
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/errorResponse"
+        "500":
+          description: Internal Server Error
           content:
             application/json:
               schema:
