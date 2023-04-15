@@ -4,6 +4,15 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { Octokit } from "@octokit/rest";
 import { authenticateUser } from "@/utils/supabase";
 
+const verifyToken = (req: NextApiRequest) => {
+  const authHeader = req.headers["authorization"];
+  if (!authHeader) {
+    return false;
+  }
+  const token = authHeader.split(" ")[1];
+  return token === process.env.OPENAI_VERIFY_TOKEN;
+};
+
 // eslint-disable-next-line import/no-anonymous-default-export
 const handleRepo = async (req: NextApiRequest, res: NextApiResponse) => {
   const { owner, repo } = req.query;
@@ -13,9 +22,16 @@ const handleRepo = async (req: NextApiRequest, res: NextApiResponse) => {
   //authenticate using bearer token
   // const { user, session, error } = await supabase.auth.api.getUserByCookie(req);
 
+  // check openai verification token
+  if (!verifyToken(req)) {
+    return res
+      .status(401)
+      .json({ error: "OpenAI verification token invalid." });
+  }
+
   // Check if the user is authenticated
   if (!user) {
-    return res.status(401).json({ error: "Unauthorized" });
+    return res.status(401).json({ error: "User not authorized" });
   }
 
   // Retrieve the stored access token for the authenticated user from the Supabase session
@@ -23,7 +39,7 @@ const handleRepo = async (req: NextApiRequest, res: NextApiResponse) => {
 
   // Check if the session data contains the GitHub access token
   if (!session) {
-    return res.status(401).json({ error: "GitHub access token not found" });
+    return res.status(401).json({ error: "Session not found" });
   }
 
   console.log("sessions", session);
