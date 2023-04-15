@@ -31,3 +31,12 @@ export function handleMethodNotAllowed(
 export function handleNotFound(req: NextApiRequest, res: NextApiResponse) {
   res.status(404).json({ error: `Cannot ${req.method} ${req.url}` });
 }
+
+export async function getSessionToken(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  const supabase = createServerSupabaseClient({ req, res });
+  const { data: session } = await supabase.auth.getSession();
+  return session;
+}
