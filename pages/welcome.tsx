@@ -14,23 +14,6 @@ const Welcome = () => {
   const session = useSession();
   const access_token = session?.access_token;
 
-  // hit /api/repo with owner=aavetis and repo=cloud-copilot query params
-  useEffect(() => {
-    if (!user) {
-      router.replace("/");
-    }
-
-    fetch(`/api/repo?owner=aavetis&repo=t-bot`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${access_token}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => console.log(data));
-  }, [access_token, user, router]);
-
   return (
     <>
       <div className="container max-w-4xl mx-auto mt-20">
