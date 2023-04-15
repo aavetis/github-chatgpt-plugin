@@ -38,6 +38,8 @@ export default async function handler(
 
     res.status(200).json(response);
   } catch (error: any) {
+    console.error("Error while fetching repository:", error); // Add this line to log the error
+
     if (error.status === 404) {
       res.status(404).json({ error: "Not Found" });
     } else {
