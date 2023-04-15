@@ -37,7 +37,7 @@ export default async function handler(
     };
 
     res.status(200).json(response);
-  } catch (error) {
+  } catch (error: any) {
     if (error.status === 404) {
       res.status(404).json({ error: "Not Found" });
     } else {
