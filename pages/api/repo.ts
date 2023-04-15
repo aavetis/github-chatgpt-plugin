@@ -15,8 +15,8 @@ const verifyToken = (req: NextApiRequest) => {
 
 // eslint-disable-next-line import/no-anonymous-default-export
 const handleRepo = async (req: NextApiRequest, res: NextApiResponse) => {
-  // log auth token
-  console.log("req.headers", req.headers);
+  // log auth token from header
+  console.log("req.headers", req.headers.authorization);
 
   const { owner, repo } = req.query;
 
