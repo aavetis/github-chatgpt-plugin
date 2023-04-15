@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { Octokit } from "@octokit/rest";
+import { authenticateUser } from "@/utils/supabase";
 
 interface RepoResponse {
   id: number;
@@ -21,6 +22,12 @@ export default async function handler(
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  const { user } = await authenticateUser(req, res);
+
+  if (!user) {
+    return res.status(401).json({ error: "Unauthorized from supabase" });
   }
 
   const token = authHeader.split(" ")[1];

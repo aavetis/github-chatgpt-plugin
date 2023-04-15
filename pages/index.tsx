@@ -41,12 +41,18 @@ const SignIn = () => {
   }, [user, router, redirectUri, accessToken]);
 
   const handleGithubSignIn = async () => {
-    const { data, error } = await supabaseClient.auth.signInWithOAuth({
+    const { data, error } = (await supabaseClient.auth.signInWithOAuth({
       provider: "github",
       options: {
         scopes: "repo gist",
       },
-    });
+    })) as any;
+
+    setAccessToken(data.session?.provider_token);
+
+    if (error) {
+      console.log(error);
+    }
   };
 
   if (!user)
