@@ -3,6 +3,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { Octokit } from "@octokit/rest";
 import { authenticateUser } from "@/utils/supabase";
+import { createServerSupabaseClient } from "@supabase/auth-helpers-nextjs";
 
 const verifyToken = (req: NextApiRequest) => {
   const authHeader = req.headers["authorization"];
@@ -13,46 +14,33 @@ const verifyToken = (req: NextApiRequest) => {
   return token === process.env.OPENAI_VERIFY_TOKEN;
 };
 
-// eslint-disable-next-line import/no-anonymous-default-export
 const handleRepo = async (req: NextApiRequest, res: NextApiResponse) => {
-  // log auth token from header
-  console.log("req.headers", req.headers.authorization);
-
   const { owner, repo } = req.query;
 
-  const { user, supabase } = await authenticateUser(req, res);
-
-  //authenticate using bearer token
-  // const { user, session, error } = await supabase.auth.api.getUserByCookie(req);
-
-  // check openai verification token
-  if (!verifyToken(req)) {
-    return res
-      .status(401)
-      .json({ error: "OpenAI verification token invalid." });
+  // Get the auth header and extract the token
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({ error: "Missing authorization header" });
   }
-
-  // Check if the user is authenticated
-  if (!user) {
-    return res.status(401).json({ error: "User not authorized" });
-  }
-
-  // Retrieve the stored access token for the authenticated user from the Supabase session
-  const { data: session } = (await supabase.auth.getSession()) as any;
-
-  // Check if the session data contains the GitHub access token
-  if (!session) {
-    return res.status(401).json({ error: "Session not found" });
-  }
-
-  console.log("sessions", session);
-
-  // Initialize the Octokit GitHub client with the access token
-  const octokit = new Octokit({ auth: session.session.access_token });
+  const token = authHeader.split(" ")[1];
 
   try {
-    // Fetch repository details from the GitHub API
+    // Verify the user token with Supabase
+    const supabase = createServerSupabaseClient({
+      req,
+      res,
+    });
 
+    const { data: user, error } = await supabase.auth.getUser(token);
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    // Initialize the Octokit GitHub client with the access token
+    const octokit = new Octokit({ auth: token });
+
+    // Fetch repository details from the GitHub API
     const { data: repository } = await octokit.rest.repos.get({
       owner: owner as string,
       repo: repo as string,
@@ -65,7 +53,7 @@ const handleRepo = async (req: NextApiRequest, res: NextApiResponse) => {
       description: repository.description,
     });
   } catch (error: any) {
-    res.status(404).json({ error: error.message });
+    res.status(401).json({ error: error.message });
   }
 };
 
