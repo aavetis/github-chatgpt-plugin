@@ -9,6 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@octokit/rest": "^19.0.7",
+    "@supabase/auth-helpers-nextjs": "^0.6.0",
+    "@supabase/auth-helpers-react": "^0.3.1",
+    "@supabase/auth-ui-react": "^0.3.3",
+    "@supabase/auth-ui-shared": "^0.1.2",
+    "@supabase/supabase-js": "^2.20.0",
     "@types/node": "18.15.11",
     "@types/react": "18.0.35",
     "@types/react-dom": "18.0.11",

@@ -1,0 +1,67 @@
+openapi: 3.0.1
+info:
+  title: ChatGPT Plugin
+  description: A plugin that integrates with GitHub to retrieve user information and repositories.
+  version: 'v1'
+servers:
+  - url: http://localhost:3333
+paths:
+  /repo:
+    get
+      operationId: getRepo
+      summary: Get the details of a GitHub repository
+      parameters:
+        - in: query
+          name: owner
+          schema:
+            type: string
+          description: The repository owner's username
+          required: true
+        - in: query
+          name: repo
+          schema:
+            type: string
+          description: The repository name
+          required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getRepoResponse'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+components:
+  schemas:
+    getRepoResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The repository's ID
+        name:
+          type: string
+          description: The repository's name
+        full_name:
+          type: string
+          description: The repository's full name
+        description:
+          type: string
+          description: The repository's description
+    errorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: The error message
