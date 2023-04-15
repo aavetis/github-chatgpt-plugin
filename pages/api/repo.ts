@@ -20,15 +20,16 @@ export default async function handler(
   }
 
   const authHeader = req.headers.authorization;
+  console.log("authHeader", authHeader);
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({ error: "Unauthorized" });
   }
 
-  const { user } = await authenticateUser(req, res);
+  // const { user } = await authenticateUser(req, res);
 
-  if (!user) {
-    return res.status(401).json({ error: "Unauthorized from supabase" });
-  }
+  // if (!user) {
+  //   return res.status(401).json({ error: "Unauthorized from supabase" });
+  // }
 
   const token = authHeader.split(" ")[1];
 
