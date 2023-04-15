@@ -2,12 +2,12 @@ openapi: 3.0.1
 info:
   title: ChatGPT Plugin
   description: A plugin that integrates with GitHub to retrieve user information and repositories.
-  version: 'v1'
+  version: "v1"
 servers:
-  - url: http://localhost:3333
+  - url: https://gh-plugin.teammait.com
 paths:
   /repo:
-    get
+    get:
       operationId: getRepo
       summary: Get the details of a GitHub repository
       parameters:
@@ -29,19 +29,59 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/getRepoResponse'
+                $ref: "#/components/schemas/getRepoResponse"
         "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/errorResponse'
+                $ref: "#/components/schemas/errorResponse"
         "404":
           description: Not Found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/errorResponse'
+                $ref: "#/components/schemas/errorResponse"
+  /api/token:
+    post:
+      operationId: getAccessToken
+      summary: Get the access token for a user
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                grant_type:
+                  type: string
+                client_id:
+                  type: string
+                client_secret:
+                  type: string
+                code:
+                  type: string
+                redirect_uri:
+                  type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/getAccessTokenResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/errorResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/errorResponse"
 components:
   schemas:
     getRepoResponse:
@@ -59,6 +99,21 @@ components:
         description:
           type: string
           description: The repository's description
+    getAccessTokenResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: The access token
+        token_type:
+          type: string
+          description: The token type
+        expires_in:
+          type: integer
+          description: The number of seconds until the token expires
+        scope:
+          type: string
+          description: The scope of the token
     errorResponse:
       type: object
       properties:
