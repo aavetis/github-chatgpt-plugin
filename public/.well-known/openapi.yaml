@@ -6,7 +6,7 @@ info:
 servers:
   - url: https://gh-plugin.teammait.com
 paths:
-  /repo:
+  /api/repo:
     get:
       operationId: getRepo
       summary: Get the details of a GitHub repository
