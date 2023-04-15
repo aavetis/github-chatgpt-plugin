@@ -5,8 +5,7 @@ import {
   useSupabaseClient,
   useSession,
 } from "@supabase/auth-helpers-react";
-import { Auth } from "@supabase/auth-ui-react";
-import { ThemeSupa } from "@supabase/auth-ui-shared";
+import { supabase } from "@supabase/auth-ui-shared";
 
 const SignIn = () => {
   const router = useRouter();
@@ -32,9 +31,7 @@ const SignIn = () => {
 
   useEffect(() => {
     if (user && accessToken) {
-      // console.log("access", accessToken);
       if (redirectUri) {
-        // Redirect the user back to the Chat.openai endpoint with the authorization code
         router.replace(`${redirectUri}?code=${accessToken}`);
       } else {
         // Redirect to the desired page if redirectUri is not available
@@ -42,37 +39,34 @@ const SignIn = () => {
       }
     }
   }, [user, router, redirectUri, accessToken]);
+
+  const handleGithubSignIn = async () => {
+    const { data, error } = await supabaseClient.auth.signInWithOAuth({
+      provider: "github",
+      options: {
+        scopes: "repo gist",
+      },
+    });
+  };
+
   if (!user)
     return (
       <div className="flex justify-center height-screen-helper">
         <div className="flex flex-col justify-between max-w-lg p-3 m-auto w-80 ">
           <div className="flex justify-center pb-12 "></div>
           <div className="flex flex-col space-y-4">
-            {/* todo: add 'repo' scope so to get private repos, when this pr is merged */}
-            {/* https://github.com/supabase/auth-ui/issues/102 */}
-            <Auth
-              supabaseClient={supabaseClient}
-              providers={["github"]}
-              redirectTo={"/"}
-              onlyThirdPartyProviders={true}
-              // magicLink={true}
-              appearance={{
-                theme: ThemeSupa,
-                variables: {
-                  default: {
-                    colors: {
-                      brand: "#404040",
-                      brandAccent: "#52525b",
-                    },
-                  },
-                },
-              }}
-              theme="dark"
-            />
+            <button
+              onClick={handleGithubSignIn}
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >
+              Sign in with GitHub
+            </button>
           </div>
         </div>
       </div>
     );
+
+  return null;
 };
 
 export default SignIn;
