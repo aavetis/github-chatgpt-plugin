@@ -30,7 +30,7 @@ const handleToken = async (req: NextApiRequest, res: NextApiResponse) => {
     console.log("session", session);
 
     // Send the access token back to ChatGPT
-    res.json({ access_token: session.access_token });
+    res.json({ access_token: code });
   } catch (error) {
     if (error instanceof Error) {
       res.status(500).json({ error: error.message });
