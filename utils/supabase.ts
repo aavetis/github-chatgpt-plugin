@@ -12,7 +12,11 @@ export async function authenticateUser(
   const supabase = createServerSupabaseClient({ req, res });
   const {
     data: { user },
+    error,
   } = await supabase.auth.getUser();
+
+  console.error("error getting user", error);
+  if (error) throw Error(error.message);
 
   if (!user) throw Error("Could not get user");
 

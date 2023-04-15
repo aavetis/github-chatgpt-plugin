@@ -15,6 +15,8 @@ const verifyToken = (req: NextApiRequest) => {
 
 // eslint-disable-next-line import/no-anonymous-default-export
 const handleRepo = async (req: NextApiRequest, res: NextApiResponse) => {
+  console.log("logging request", req);
+
   const { owner, repo } = req.query;
 
   const { user, supabase } = await authenticateUser(req, res);
