@@ -53,6 +53,14 @@ const SignIn = () => {
     if (error) {
       console.log(error);
     }
+    if (user && accessToken) {
+      if (redirectUri) {
+        router.replace(`${redirectUri}?code=${accessToken}`);
+      } else {
+        // Redirect to the desired page if redirectUri is not available
+        // router.replace("/welcome");
+      }
+    }
   };
 
   if (!user)
