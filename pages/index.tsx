@@ -1,6 +1,10 @@
 import { useRouter } from "next/router";
-import { useEffect } from "react";
-import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useEffect, useState } from "react";
+import {
+  useUser,
+  useSupabaseClient,
+  useSession,
+} from "@supabase/auth-helpers-react";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 
@@ -8,12 +12,32 @@ const SignIn = () => {
   const router = useRouter();
   const user = useUser();
   const supabaseClient = useSupabaseClient();
+  const [redirectUri, setRedirectUri] = useState("");
+  const [accesToken, setAccessToken] = useState("");
+
+  const session = useSession();
+  console.log("session token", session?.access_token);
+
+  useEffect(() => {
+    const redirectParam = router.query.redirect_uri as string;
+    if (redirectParam) {
+      setRedirectUri(redirectParam);
+    }
+  }, [router.query]);
 
   useEffect(() => {
     if (user) {
-      router.replace("/welcome");
+      // Assuming you have the authorization code in a variable called authCode
+
+      if (redirectUri) {
+        // Redirect the user back to the Chat.openai endpoint with the authorization code
+        router.replace(`${redirectUri}?code=123`);
+      } else {
+        // Redirect to the desired page if redirectUri is not available
+        router.replace("/welcome");
+      }
     }
-  }, [user, router]);
+  }, [user, router, redirectUri]);
 
   if (!user)
     return (
