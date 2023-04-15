@@ -27,12 +27,12 @@ const handleRepo = async (req: NextApiRequest, res: NextApiResponse) => {
   console.log("token", token);
   try {
     // Verify the user token with Supabase
-    const supabase = createServerSupabaseClient({
-      req,
-      res,
-    });
+    // const supabase = createServerSupabaseClient({
+    //   req,
+    //   res,
+    // });
 
-    const { data: user } = await supabase.auth.getUser(token);
+    // const { data: user } = await supabase.auth.getUser(token);
 
     // if (error) {
     //   console.log("error", error);
