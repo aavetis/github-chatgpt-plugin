@@ -16,8 +16,8 @@ export async function authenticateUser(
     error,
   } = await supabase.auth.getUser();
 
-  console.error("error getting user", error);
-  if (error) throw Error(error.message);
+  // console.error("error getting user", error);
+  // if (error) throw Error(error.message);
 
   if (!user) throw Error("Could not get user");
 
