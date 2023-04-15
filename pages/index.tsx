@@ -25,7 +25,7 @@ const SignIn = () => {
 
   useEffect(() => {
     if (session) {
-      setAccessToken(session.access_token);
+      setAccessToken(session.provider_token as string);
     }
   }, [session]);
 
