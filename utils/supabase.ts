@@ -10,11 +10,16 @@ export async function authenticateUser(
   res: NextApiResponse
 ) {
   // console.log("logging headers", req.headers);
+
+  // modify authorization header to be compatible with supabase. remove "bearer" and just keep token.
+  const token = req.headers.authorization?.replace("Bearer ", "");
+  // req.headers.authorization = token;
+
   const supabase = createServerSupabaseClient({ req, res });
   const {
     data: { user },
     error,
-  } = await supabase.auth.getUser();
+  } = await supabase.auth.getUser(token);
 
   // console.error("error getting user", error);
   // if (error) throw Error(error.message);
