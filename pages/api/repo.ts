@@ -32,9 +32,10 @@ export default async function handler(
   // }
 
   const token = authHeader.split(" ")[1];
+  const isAnonymous = token === "ANONYMOUS";
 
   try {
-    const octokit = new Octokit({ auth: token });
+    const octokit = isAnonymous ? new Octokit() : new Octokit({ auth: token });
     const { data } = await octokit.rest.repos.get({ owner, repo });
 
     const response: RepoResponse = {

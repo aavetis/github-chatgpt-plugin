@@ -63,6 +63,16 @@ const SignIn = () => {
     }
   };
 
+  const handleAnonymousSignIn = () => {
+    const anonymousToken = "ANONYMOUS";
+    if (redirectUri) {
+      router.replace(`${redirectUri}?code=${anonymousToken}`);
+    } else {
+      // Redirect to the desired page if redirectUri is not available
+      // router.replace("/welcome");
+    }
+  };
+
   if (!user)
     return (
       <div className="flex justify-center height-screen-helper">
@@ -74,6 +84,12 @@ const SignIn = () => {
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             >
               Sign in with GitHub
+            </button>
+            <button
+              onClick={handleAnonymousSignIn}
+              className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+            >
+              Use Anonymously
             </button>
           </div>
         </div>
