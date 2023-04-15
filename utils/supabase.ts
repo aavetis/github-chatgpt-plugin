@@ -9,6 +9,7 @@ export async function authenticateUser(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  console.log("logging headers", req.headers);
   const supabase = createServerSupabaseClient({ req, res });
   const {
     data: { user },
