@@ -31,7 +31,7 @@ const handleRepo = async (req: NextApiRequest, res: NextApiResponse) => {
       res,
     });
 
-    const { data: user, error } = await supabase.auth.getUser();
+    const { data: user, error } = await supabase.auth.getUser(token);
 
     if (error) {
       console.log("error", error);
