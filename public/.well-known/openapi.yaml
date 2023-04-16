@@ -9,7 +9,7 @@ paths:
   /api/repo:
     post:
       operationId: callOctokitMethod
-      summary: Make a dynamic API call using Octokit JS library to Github
+      summary: Make a dynamic API call using Octokit JS library to Github. Provide octokitMethod and args {} in the request body.
       requestBody:
         required: true
         content:
