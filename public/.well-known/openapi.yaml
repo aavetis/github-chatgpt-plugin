@@ -22,20 +22,15 @@ paths:
                   description: The valid Octokit method to call in the format `category.method`, e.g., 'issues.listForRepo', 'repos.get',
                   required: true
                 args:
-                  type: object
-                  description: The valid arguments for the Octokit method. Searching requires a q param, e.g. q=stars:>500+language:javascript.
-                  additionalProperties: true
+                  $ref: "#/components/schemas/flexibleObject"
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: "#/components/schemas/RepoResponse"
-                  - $ref: "#/components/schemas/IssueResponse"
-                  - type: object
-                    additionalProperties: true
+                type: object
+                additionalProperties: true
         "401":
           description: Unauthorized
           content:
@@ -58,11 +53,7 @@ components:
           description: The error message
       required:
         - error
-    RepoResponse:
+    flexibleObject:
       type: object
-      properties:
-        # Define properties specific to the repository response here
-    IssueResponse:
-      type: object
-      properties:
-        # Define properties specific to the issue response here
+      nullable: true
+      additionalProperties: true
