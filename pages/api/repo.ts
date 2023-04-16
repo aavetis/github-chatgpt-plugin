@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { Octokit, RestEndpointMethodTypes } from "@octokit/rest";
-import { authenticateUser } from "@/utils/supabase";
 
 type OctokitMethod = keyof RestEndpointMethodTypes;
 
@@ -48,15 +47,9 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method !== "POST") {
-    res.setHeader("Allow", "POST");
-    return res.status(405).json({ error: "Method Not Allowed" });
-  }
-
-  const { octokitMethod, args } = req.body;
+  const { octokitMethod, ...args } = req.body;
 
   const authHeader = req.headers.authorization;
-  // console.log("authHeader", authHeader);
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({ error: "Unauthorized" });
   }
@@ -65,16 +58,15 @@ export default async function handler(
   const isAnonymous = token === "ANONYMOUS";
 
   try {
-    const parsedArgs = JSON.parse(args as string);
     const octokit = isAnonymous ? new Octokit() : new Octokit({ auth: token });
 
     // Logging the requested function call and constructed call
     console.log("Requested function call:", octokitMethod);
-    console.log("Constructed call with args:", parsedArgs);
+    console.log("Constructed call with args:", args);
 
     const data = await callOctokitMethod(octokit, {
       octokitMethod: octokitMethod as OctokitMethod,
-      args: parsedArgs,
+      args,
     });
 
     res.status(200).json(data);
