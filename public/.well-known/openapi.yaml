@@ -7,22 +7,24 @@ servers:
   - url: https://gh-plugin.teammait.com
 paths:
   /api/repo:
-    get:
+    post:
       operationId: callOctokitMethod
       summary: Make a dynamic Octokit API call
-      parameters:
-        - in: query
-          name: octokitMethod
-          schema:
-            type: string
-          description: The Octokit method to call in the format `category.method`, e.g., 'issues.listForRepo', 'repos.get', etc.
-          required: true
-        - in: query
-          name: args
-          schema:
-            type: string
-          description: A JSON string containing the arguments for the Octokit method
-          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                octokitMethod:
+                  type: string
+                  description: The Octokit method to call in the format `category.method`, e.g., 'issues.listForRepo', 'repos.get', etc.
+                  required: true
+                args:
+                  type: object
+                  description: The arguments for the Octokit method
+                  additionalProperties: true
       responses:
         "200":
           description: OK
@@ -39,6 +41,12 @@ paths:
                 $ref: "#/components/schemas/errorResponse"
         "404":
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/errorResponse"
+        "405":
+          description: Method Not Allowed
           content:
             application/json:
               schema:

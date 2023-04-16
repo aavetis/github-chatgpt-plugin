@@ -48,7 +48,12 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { octokitMethod, args } = req.query;
+  if (req.method !== "POST") {
+    res.setHeader("Allow", "POST");
+    return res.status(405).json({ error: "Method Not Allowed" });
+  }
+
+  const { octokitMethod, args } = req.body;
 
   const authHeader = req.headers.authorization;
   // console.log("authHeader", authHeader);
