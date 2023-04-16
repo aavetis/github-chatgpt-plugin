@@ -6,7 +6,7 @@ import {
 } from "@supabase/auth-helpers-nextjs";
 
 const handleToken = async (req: NextApiRequest, res: NextApiResponse) => {
-  console.log("req.body", req.body);
+  // console.log("req.body", req.body);
 
   try {
     // Read the required parameters from the request body

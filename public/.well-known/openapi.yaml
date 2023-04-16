@@ -9,7 +9,7 @@ paths:
   /api/repo:
     post:
       operationId: callOctokitMethod
-      summary: Make a dynamic Octokit API call
+      summary: Make a dynamic API call using Octokit JS library to Github
       requestBody:
         required: true
         content:
@@ -19,11 +19,11 @@ paths:
               properties:
                 octokitMethod:
                   type: string
-                  description: The Octokit method to call in the format `category.method`, e.g., 'issues.listForRepo', 'repos.get', etc.
+                  description: The valid Octokit method to call in the format `category.method`, e.g., 'issues.listForRepo', 'repos.get',
                   required: true
                 args:
                   type: object
-                  description: The arguments for the Octokit method
+                  description: The valid arguments for the Octokit method. Searching requires a q param, e.g. q=stars:>500+language:javascript.
                   additionalProperties: true
       responses:
         "200":
