@@ -101,19 +101,7 @@ components:
   schemas:
     getRepoResponse:
       type: object
-      properties:
-        id:
-          type: integer
-          description: The repository's ID
-        name:
-          type: string
-          description: The repository's name
-        full_name:
-          type: string
-          description: The repository's full name
-        description:
-          type: string
-          description: The repository's description
+      additionalProperties: true
     getAccessTokenResponse:
       type: object
       properties:
