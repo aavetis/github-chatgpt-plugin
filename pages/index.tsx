@@ -48,12 +48,14 @@ const SignIn = () => {
       },
     })) as any;
 
-    setAccessToken(data.session?.provider_token);
-
     if (error) {
       console.log(error);
+      return;
     }
-    if (user && accessToken) {
+
+    if (data && data.session) {
+      const accessToken = data.session.provider_token;
+
       if (redirectUri) {
         router.replace(`${redirectUri}?code=${accessToken}`);
       } else {

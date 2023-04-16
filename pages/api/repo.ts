@@ -51,7 +51,7 @@ export default async function handler(
   const { octokitMethod, args } = req.query;
 
   const authHeader = req.headers.authorization;
-  console.log("authHeader", authHeader);
+  // console.log("authHeader", authHeader);
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({ error: "Unauthorized" });
   }
