@@ -39,7 +39,7 @@ async function callOctokitMethod(octokit: Octokit, octokitCall: OctokitCall) {
   ) {
     throw new Error("Invalid octokitMethod");
   }
-
+  console.log("trying to use these args:", JSON.stringify(args));
   return (octokit.rest[category][method] as any)(args);
 }
 
