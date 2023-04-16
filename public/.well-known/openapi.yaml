@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: ChatGPT Plugin
-  description: A plugin that integrates with GitHub to retrieve user information and repositories.
+  description: Plugin that integrates with GitHub to retrieve user information and repositories. Used to search for trending repositories, code, issues, pull requests, and more. Users should be able to use this plugin to interact with GitHub in a conversational way.
   version: "v1"
 servers:
   - url: https://gh-plugin.teammait.com
