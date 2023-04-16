@@ -47,7 +47,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { octokitMethod, ...args } = req.body;
+  const { octokitMethod, args } = req.body; // Keep the args object as it is
   console.log("Request body:", req.body);
 
   const authHeader = req.headers.authorization;

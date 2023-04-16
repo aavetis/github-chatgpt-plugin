@@ -6,8 +6,6 @@ import {
 } from "@supabase/auth-helpers-nextjs";
 
 const handleToken = async (req: NextApiRequest, res: NextApiResponse) => {
-  // console.log("req.body", req.body);
-
   try {
     // Read the required parameters from the request body
     const { grant_type, client_id, client_secret, code, redirect_uri } =
@@ -22,10 +20,6 @@ const handleToken = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(400).json({ error: "invalid_request" });
     }
 
-    // Exchange the authorization code for an access token
-    // const { user } = await authenticateUser(req, res);
-
-    // getSessionToken
     const session = (await getSessionToken(req, res)) as any;
     console.log("session", session);
 
