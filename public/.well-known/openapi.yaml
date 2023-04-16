@@ -23,7 +23,7 @@ paths:
                   required: true
                 args:
                   type: object
-                  description: The valid arguments for the Octokit method, nested in an 'args' object. Searching requires a q param, e.g. q=stars:>500+language:javascript.
+                  description: The valid arguments for the Octokit method. Searching requires a q param, e.g. q=stars:>500+language:javascript.
                   additionalProperties: true
       responses:
         "200":

@@ -48,6 +48,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { octokitMethod, ...args } = req.body;
+  console.log("Request body:", req.body);
 
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
