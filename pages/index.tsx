@@ -47,9 +47,6 @@ const SignIn = () => {
       options: {
         scopes: "repo gist",
         // redirectTo: redirectUri,
-        queryParams: {
-          openai_redirect: redirectUri,
-        },
       },
     })) as any;
 
@@ -59,11 +56,16 @@ const SignIn = () => {
     }
 
     if (data && data.session) {
-      const accessToken = data.session.provider_token;
+      console.log("we just got a successful login");
+      // const accessToken = data.session.provider_token;
+      console.log("accessToken", accessToken);
+      setAccessToken(accessToken);
 
       if (redirectUri) {
         router.replace(`${redirectUri}?code=${accessToken}`);
       } else {
+        console.log("don't have a redirect");
+
         // Redirect to the desired page if redirectUri is not available
         router.replace("/welcome");
       }
