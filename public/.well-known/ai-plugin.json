@@ -17,7 +17,7 @@
     "api": {
         "type": "openapi",
         "url": "https://gh-plugin.teammait.com/.well-known/openapi.yaml",
-        "is_user_authenticated": true
+        "is_user_authenticated": false
     },
     "logo_url": "https://gh-plugin.teammait.com/logo.png",
     "contact_email": "albs@teammait.com",
