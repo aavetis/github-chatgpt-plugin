@@ -46,7 +46,10 @@ const SignIn = () => {
       provider: "github",
       options: {
         scopes: "repo gist",
-        redirectTo: redirectUri,
+        // redirectTo: redirectUri,
+        queryParams: {
+          redirect_uri: redirectUri,
+        },
       },
     })) as any;
 
