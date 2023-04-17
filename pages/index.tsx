@@ -21,6 +21,8 @@ const SignIn = () => {
     if (redirectParam) {
       setRedirectUri(redirectParam);
       console.log("about to redirect to ", redirectParam);
+      // store the redirectUri in localStorage so we can access it later
+      localStorage.setItem("redirect_uri", redirectParam);
     }
   }, [router.query]);
 
@@ -32,8 +34,12 @@ const SignIn = () => {
 
   useEffect(() => {
     if (user && accessToken) {
-      if (redirectUri) {
-        router.replace(`${redirectUri}?code=${accessToken}`);
+      const storedRedirectUri = localStorage.getItem("redirect_uri");
+
+      if (storedRedirectUri) {
+        localStorage.removeItem("redirect_uri");
+
+        router.replace(`${storedRedirectUri}?code=${accessToken}`);
       } else {
         // Redirect to the desired page if redirectUri is not available
         // router.replace("/welcome");
