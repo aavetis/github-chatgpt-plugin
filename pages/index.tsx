@@ -20,6 +20,7 @@ const SignIn = () => {
     const redirectParam = router.query.redirect_uri as string;
     if (redirectParam) {
       setRedirectUri(redirectParam);
+      console.log("about to redirect to ", redirectParam);
     }
   }, [router.query]);
 
