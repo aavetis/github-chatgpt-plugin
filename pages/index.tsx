@@ -48,7 +48,7 @@ const SignIn = () => {
         scopes: "repo gist",
         // redirectTo: redirectUri,
         queryParams: {
-          redirect_uri: redirectUri,
+          openai_redirect: redirectUri,
         },
       },
     })) as any;
