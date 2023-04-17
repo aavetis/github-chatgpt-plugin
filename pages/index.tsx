@@ -65,7 +65,7 @@ const SignIn = () => {
         router.replace(`${redirectUri}?code=${accessToken}`);
       } else {
         // Redirect to the desired page if redirectUri is not available
-        // router.replace("/welcome");
+        router.replace("/welcome");
       }
     }
   };
