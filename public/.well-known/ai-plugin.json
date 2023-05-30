@@ -1,8 +1,8 @@
 {
     "schema_version": "v1",
-    "name_for_human": "GitHub [UNOFFICIAL] Plugin",
+    "name_for_human": "GitHub Unofficial",
     "name_for_model": "github_repo_interaction",
-    "description_for_human": "Plugin for interacting with GitHub repositories, accessing file structures, and modifying code. @albfresco for support.",
+    "description_for_human": "Plugin for interacting with all GitHub contents like repos, issues, and code. @albfresco for support.",
     "description_for_model": "This plugin allows you to interact with GitHub repositories, access file structures, modify code, and discuss code implementation. Users may use keywords like 'fetch file contents', 'propose code changes', and 'discuss code implementation' to get the most out of this plugin. You have access to raw function commands from the Octokit library, for example: repos.listForUser, issues.create, repos.getReadme, and more.",
     "auth": {
         "type": "oauth",
