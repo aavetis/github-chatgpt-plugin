@@ -11,7 +11,7 @@
         "authorization_url": "https://gh-plugin.teammait.com/api/token",
         "authorization_content_type": "application/json",
         "verification_tokens": {
-            "openai": "5f11e1ad9ed14c8688ca334ce98ebed7"
+            "openai": "ff50d8cf28a447d4883586989ce66c69"
         }
     },
     "api": {
