@@ -9,7 +9,7 @@ paths:
   /api/repo:
     post:
       operationId: callOctokitMethod
-      summary: Make a dynamic API call using Octokit JS library to Github. Provide octokitMethod and args {} in the request body.
+      summary: Make a dynamic API call to the Octokit JS library to Github. Provide valid octokitMethod and args {} in the request body.
       requestBody:
         required: true
         content:
@@ -19,7 +19,7 @@ paths:
               properties:
                 octokitMethod:
                   type: string
-                  description: The valid Octokit method to call in the format `category.method`, e.g., 'issues.listForRepo', 'repos.get', 'search.repos', 'search.code'
+                  description: The valid Octokit method to call in the format `category.method`, e.g., issues.listForRepo, repos.get, search.repos, search.code, issues.list, repos.listForks, etc.
                   required: true
                 args:
                   $ref: "#/components/schemas/flexibleObject"

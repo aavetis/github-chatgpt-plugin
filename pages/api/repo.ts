@@ -70,7 +70,8 @@ export default async function handler(
       args,
     });
 
-    res.status(200).json(data);
+    // return just the data portion
+    res.status(200).json(data.data);
   } catch (error: any) {
     console.error("Error while calling the Octokit method:", error);
 
