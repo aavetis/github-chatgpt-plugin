@@ -39,7 +39,7 @@ async function callOctokitMethod(octokit: Octokit, octokitCall: OctokitCall) {
   ) {
     throw new Error("Invalid octokitMethod");
   }
-  console.log("trying to use these args:", JSON.stringify(args));
+  // console.log("trying to use these args:", JSON.stringify(args));
   return (octokit.rest[category][method] as any)(args);
 }
 
@@ -49,6 +49,10 @@ export default async function handler(
 ) {
   const { octokitMethod, args } = req.body; // Keep the args object as it is
   console.log("Request body:", req.body);
+
+  // temporarily log and remove auth headers
+  console.log("Request headers:", req.headers);
+  delete req.headers["Authorization"]; // Example to remove the Authorization header
 
   try {
     const octokit = new Octokit();
