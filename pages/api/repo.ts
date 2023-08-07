@@ -50,16 +50,8 @@ export default async function handler(
   const { octokitMethod, args } = req.body; // Keep the args object as it is
   console.log("Request body:", req.body);
 
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-
-  const token = authHeader.split(" ")[1];
-  const isAnonymous = token === "ANONYMOUS";
-
   try {
-    const octokit = isAnonymous ? new Octokit() : new Octokit({ auth: token });
+    const octokit = new Octokit();
 
     // Logging the requested function call and constructed call
     console.log("Requested function call:", octokitMethod);
