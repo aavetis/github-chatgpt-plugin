@@ -1,3 +1,5 @@
+> ### ❗️ NOTE: This plugin has been removed from the ChatGPT store for being "too autonomous" - so it is pending an update to require explicit user confirmation before posting / deleting any resources.
+
 # Overview
 
 Chat with Code is an official ChatGPT plugin that let's you interact with everything in GitHub. Everything, including repos, issues, commits, file contents, and more. 
